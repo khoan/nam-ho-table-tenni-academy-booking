@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Booking - Nam Ho Table Tennis Academy</title>
   <link rel="stylesheet" href="tachyons.css"/>
+  <style>
+input[type=radio]:checked+label {
+  color: rgba(255,255,255,0.9);
+  background-color: rgba(0,0,0,0.8);
+}
+  </style>
 </head>
 <body>
   <main>
@@ -24,34 +30,60 @@
               <input class="pa2 input-reset ba bg-transparent b--black-40" type="text" name="contact" id="contact">
             </div>
           </fieldset>
-          <fieldset class="mt4 bn ph0">
+          <fieldset class="mt3 bn ph0">
             <legend class="f4 fw4 black-60">Date</legend>
-            <div class="flex items-center mb2">
-              <input class="mr2" type="radio" name="session[date]" id="session-sat" value="12 Sep 2020">
-              <label for="session-sat" class="lh-copy pointer">Sat 12 Sep</label>
+            <div class="dib">
+              <div class="flex items-center">
+                <input class="dn" type="radio" name="session[date]" id="session-sat" value="12 Sep 2020">
+                <label for="session-sat" class="ba ph3 pv2 b--black-40 pointer">
+                  <div class="f4 tc">Saturday</div>
+                  <div class="f5">12 Sep 2020</div>
+                </label>
+              </div>
             </div>
-            <div class="flex items-center mb2">
-              <input class="mr2" type="radio" name="session[date]" id="session-sun" value="13 Sep 2020">
-              <label for="session-sun" class="lh-copy pointer">Sun 13 Sep</label>
+            <div class="dib">
+              <div class="flex items-center dib">
+                <input class="dn" type="radio" name="session[date]" id="session-sun" value="13 Sep 2020">
+                <label for="session-sun" class="ba ph3 pv2 b--black-40 pointer">
+                  <div class="f4 tc">Sunday</div>
+                  <div class="f5">13 Sep 2020</div>
+                </label>
+              </div>
             </div>
           </fieldset>
-          <fieldset class="mt4 bn ph0">
+          <fieldset class="mt3 bn ph0">
             <legend class="f4 fw4 black-60">Time</legend>
-            <div class="flex items-center mb2">
-              <input class="mr2" type="radio" name="session[time]" id="session-14" value="14">
-              <label for="session-14" class="lh-copy pointer">2pm - 4pm</label>
+            <div class="dib">
+              <div class="flex items-center">
+                <input class="dn" type="radio" name="session[time]" id="session-14" value="14">
+                <label for="session-14" class="ba ph3 pv2 b--black-40 pointer">
+                  <div class="f4 tc">2pm - 4pm</div>
+                </label>
+              </div>
             </div>
-            <div class="flex items-center mb2">
-              <input class="mr2" type="radio" name="session[time]" id="session-16" value="16">
-              <label for="session-16" class="lh-copy pointer">4pm - 6pm</label>
+            <div class="dib">
+              <div class="flex items-center">
+                <input class="dn" type="radio" name="session[time]" id="session-16" value="16">
+                <label for="session-16" class="ba ph3 pv2 b--black-40  pointer">
+                  <div class="f4 tc">4pm - 6pm</div>
+                </label>
+              </div>
             </div>
-            <div class="flex items-center mb2">
-              <input class="mr2" type="radio" name="session[time]" id="session-18" value="18">
-              <label for="session-18" class="lh-copy pointer">6pm - 8pm</label>
+            <div class="dib">
+              <div class="flex items-center">
+                <input class="dn" type="radio" name="session[time]" id="session-18" value="18">
+                <label for="session-18" class="ba ph3 pv2 b--black-40 pointer">
+                  <div class="f4 tc">6pm - 8pm</div>
+                </label>
+              </div>
             </div>
-            <div class="flex items-center mb2">
-              <input class="mr2" type="radio" name="session[time]" id="session-20" value="20">
-              <label for="session-20" class="lh-copy pointer">8pm - 10pm</label>
+            <div class="dib">
+              <div class="flex items-center mb2">
+                <input class="dn" type="radio" name="session[time]" id="session-20" value="20">
+                <label for="session-20" class="ba ph3 pv2 b--black-40 pointer">
+                  <div class="f4 tc">8pm - 10pm<div>
+                </label>
+              </div>
             </div>
           </fieldset>
           <div class="mt3">
@@ -67,11 +99,11 @@
   <footer class="pv4 ph3 ph5-m ph6-l mid-gray">
     <small class="f6 db tc">1/5 Clyde Street, Rydalmere, NSW, 2116</small>
     <div class="tc mt3">
-      <a href="mailto:ssook6880@gmail.com" class="js-email mid-gray link dib dim br2 ph2 pb1 lh-solid v-top">
+      <a href="mailto:ssook6880@gmail.com" class="js-email mid-gray link dib dim ph2 pb1 lh-solid">
         <svg class="dib" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
         </svg>
-        <span class="dib v-mid fw6" style="font-size: 12px;">Sue</span>
+        <span class="dib fw6" style="font-size: 12px;">Sue</span>
       </a>
     </div>
   </footer>
