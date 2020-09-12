@@ -32,61 +32,13 @@ input[type=radio]:checked+label {
           </fieldset>
           <fieldset class="mt3 bn ph0">
             <legend class="f4 fw4 black-60">Date</legend>
-            <div class="dib">
-              <div class="flex items-center">
-                <input class="dn" type="radio" name="session[date]" id="session-sat" value="12 Sep 2020">
-                <label for="session-sat" class="ba ph3 pv2 b--black-40 pointer">
-                  <div class="f4 tc">Saturday</div>
-                  <div class="f5">12 Sep 2020</div>
-                </label>
-              </div>
-            </div>
-            <div class="dib">
-              <div class="flex items-center dib">
-                <input class="dn" type="radio" name="session[date]" id="session-sun" value="13 Sep 2020">
-                <label for="session-sun" class="ba ph3 pv2 b--black-40 pointer">
-                  <div class="f4 tc">Sunday</div>
-                  <div class="f5">13 Sep 2020</div>
-                </label>
-              </div>
-            </div>
+            <div id="js-session_dates"></div>
           </fieldset>
           <fieldset class="mt3 bn ph0">
             <legend class="f4 fw4 black-60">Time</legend>
-            <div class="dib">
-              <div class="flex items-center">
-                <input class="dn" type="radio" name="session[time]" id="session-14" value="14">
-                <label for="session-14" class="ba ph3 pv2 b--black-40 pointer">
-                  <div class="f4 tc">2pm - 4pm</div>
-                </label>
-              </div>
-            </div>
-            <div class="dib">
-              <div class="flex items-center">
-                <input class="dn" type="radio" name="session[time]" id="session-16" value="16">
-                <label for="session-16" class="ba ph3 pv2 b--black-40  pointer">
-                  <div class="f4 tc">4pm - 6pm</div>
-                </label>
-              </div>
-            </div>
-            <div class="dib">
-              <div class="flex items-center">
-                <input class="dn" type="radio" name="session[time]" id="session-18" value="18">
-                <label for="session-18" class="ba ph3 pv2 b--black-40 pointer">
-                  <div class="f4 tc">6pm - 8pm</div>
-                </label>
-              </div>
-            </div>
-            <div class="dib">
-              <div class="flex items-center mb2">
-                <input class="dn" type="radio" name="session[time]" id="session-20" value="20">
-                <label for="session-20" class="ba ph3 pv2 b--black-40 pointer">
-                  <div class="f4 tc">8pm - 10pm<div>
-                </label>
-              </div>
-            </div>
+            <div id="js-session_times"></div>
           </fieldset>
-          <div class="mt3">
+          <div class="mt5">
             <input class="pointer dim ph4 pv2 mb2 dib white bg-dark-blue" type="submit" value="Book">
           </div>
         </form>
@@ -107,5 +59,79 @@ input[type=radio]:checked+label {
       </a>
     </div>
   </footer>
+  <script type="module">
+    import { el, list, mount } from "./redom.js";
+
+    class SessionDate {
+      update({ label, value }) {
+        const inputId = `session-${label.day}`;
+
+        this.el = el(".dib.mr3",
+          el(".flex.items-center",
+            el("input.dn", {type: "radio", name: "session_date", id: inputId, value}),
+            el("label.ba.ph3.pv2.b--black-40.pointer", {for: inputId},
+              [
+                el(".f4.tc", label.day),
+                el(".f5", label.date)
+              ]
+            )
+          )
+        );
+      }
+    }
+
+    class SessionTime {
+      update({ label, value }) {
+        const inputId = `session-${value}`;
+
+        this.el = el(".dib.mr3",
+          el(".flex.items-center",
+            el("input.dn", {type: "radio", name: "session[time]", id: inputId, value}),
+            el("label.ba.ph3.pv2.b--black-40.pointer", {for: inputId},
+              el(".f4.tc", label)
+            )
+          )
+        );
+      }
+    }
+
+    const sessionDates = document.getElementById("js-session_dates");
+    const availableDates = list("div", SessionDate);
+
+    const sessionTimes = document.getElementById("js-session_times");
+    const availableTimes = list(el(".f4", "Please pick a date"), SessionTime, "value");
+
+    mount(sessionDates, availableDates);
+    mount(sessionTimes, availableTimes);
+
+    availableDates.update([
+      {label: {day: "Saturday", date: "12 Sep 2020"}, value: "Sat"},
+      {label: {day: "Sunday", date: "13 Sep 2020"}, value: "Sun"}
+    ]);
+    availableTimes.update([
+      {label: "2pm - 4pm", value: 14},
+      {label:  "4pm - 6pm", value: 16},
+      {label: "6pm - 8pm", value: 18},
+      {label: "8pm - 10pm", value: 20}
+    ]);
+
+    const SessionDictionary = {
+      Mon: [16,18,20],
+      Tue: [16,18,20],
+      Wed: [16,18,20],
+      Thu: [16,18,20],
+      Fri: [16,18,20],
+      Sat: [14,16],
+      Sun: [14,16],
+      14: "2pm - 4pm",
+      16: "4pm - 6pm",
+      18: "6pm - 8pm",
+      20: "8pm - 10pm",
+    };
+
+    //const app = new SessionPickerApp({ SessionDictionary });
+    //app.showAvailable();
+    //app.listen();
+  </script>
 </body>
 </html>
