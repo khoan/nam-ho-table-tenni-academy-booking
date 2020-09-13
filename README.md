@@ -1,7 +1,9 @@
 # development
 
-npm install -g @11ty/eleventy
+```
+npm install eleventy --save-dev
 npx eleventy --serve --formats=avif,jpg,svg,webp,html,css
+```
 
 # reference
 
