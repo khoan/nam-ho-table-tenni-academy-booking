@@ -6,7 +6,7 @@ class SessionDate {
 
     this.el = el(".dib.mr3",
       el(".flex.items-center",
-        el("input.dn", {type: "radio", name: "session_date", id: inputId, value}),
+        el("input.dn", {type: "radio", name: "session[date]", id: inputId, value, required: true}),
         el("label.ba.ph3.pv2.b--black-40.pointer", {for: inputId},
           [
             el(".f4.tc", label.day),
@@ -24,7 +24,7 @@ class SessionTime {
 
     this.el = el(".dib.mr3",
       el(".flex.items-center",
-        el("input.dn", {type: "radio", name: "session[time]", id: inputId, value}),
+        el("input.dn", {type: "radio", name: "session[time]", id: inputId, value, required: true}),
         el("label.ba.ph3.pv2.b--black-40.pointer", {for: inputId},
           el(".f4.tc", label)
         )

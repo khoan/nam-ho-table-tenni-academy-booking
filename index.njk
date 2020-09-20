@@ -1,3 +1,8 @@
+---js
+{
+  backendUrl: process.env.BACKEND_URL
+}
+---
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,6 +11,7 @@
   <title>Booking - Nam Ho Table Tennis Academy</title>
   <link rel="stylesheet" href="tachyons.css"/>
   <style>
+input[type=checkbox]:checked+label,
 input[type=radio]:checked+label {
   color: rgba(255,255,255,0.9);
   background-color: rgba(0,0,0,0.8);
@@ -18,16 +24,18 @@ input[type=radio]:checked+label {
       <div class="pv5 f4 f2-ns measure center">
         <h1 class="fw6 f1 fl w-100 black-70 mt0 mb3 avenir">Booking</h1>
 
-        <form accept-charset="utf-8">
+        <form id="js-booking_form" action="{{ backendUrl }}" accept-charset="utf-8" method="POST">
+          <input type="hidden" name="Action" value="create">
+
           <fieldset id="sign_up" class="ba b--transparent ph0 mh0">
             <legend class="ph0 mh0 fw6 clip">Booking</legend>
             <div class="mt4">
               <label class="db fw4 lh-copy f4 black-60" for="name">Your Name</label>
-              <input class="pa2 input-reset ba bg-transparent b--black-40" type="text" name="name" id="name">
+              <input class="pa2 input-reset ba bg-transparent b--black-40" type="text" name="name" id="name" required>
             </div>
             <div class="mt4">
               <label class="db fw4 lh-copy f4 black-60" for="contact">Your Contact Number</label>
-              <input class="pa2 input-reset ba bg-transparent b--black-40" type="text" name="contact" id="contact">
+              <input class="pa2 input-reset ba bg-transparent b--black-40" type="text" name="contact" id="contact" required>
             </div>
           </fieldset>
           <fieldset class="mt3 bn ph0">
@@ -39,7 +47,7 @@ input[type=radio]:checked+label {
             <div id="js-session_times"></div>
           </fieldset>
           <div class="mt5">
-            <input class="pointer dim ph4 pv2 mb2 dib white bg-dark-blue" type="submit" value="Book">
+            <input class="pointer dim ph4 pv2 mb2 dib white bg-dark-blue" type="submit" name="submit" value="Book">
           </div>
         </form>
       </div>
@@ -88,6 +96,31 @@ input[type=radio]:checked+label {
     //console.log('start date', app.startDate);
     //console.log('available dates', app.availableDates(app.startDate));
     //console.log('available times', app.availableTimes(SessionDictionary['Sun']));
+  </script>
+  <script>
+    const form = document.getElementById("js-booking_form");
+    form.addEventListener("submit", (eventData) => {
+      eventData.preventDefault();
+
+      const originalText = form.submit.value;
+
+      form.submit.disabled = true;
+      form.submit.style.cssText = 'background-color: #137752';
+      form.submit.value = "Processing...";
+
+      fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+      })
+        .then(response => response.json())
+        .then(result => alert(result.body.message))
+        .finally(() => {
+          form.submit.disabled = false;
+          form.submit.style.cssText = '';
+          form.submit.value = "Thank You!";
+          setTimeout(() => form.submit.value = originalText, 1500);
+        });
+    });
   </script>
 </body>
 </html>
