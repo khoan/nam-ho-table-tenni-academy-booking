@@ -51,7 +51,6 @@ var Tools = {
 , content: ContentService
 , sheet: SpreadsheetApp
 , json: JSON
-, misc: Utilities
 };
 
 var Sheet = (function(service, config) {
