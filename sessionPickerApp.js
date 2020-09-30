@@ -68,7 +68,7 @@ export default class SessionPickerApp {
 
   showAvailableDates() {
     this.availableDatesEl.update(
-      this.availableDates(this.startDate)
+      this.availableDates()
     );
   }
 
@@ -85,6 +85,7 @@ export default class SessionPickerApp {
   }
 
   availableDates(startDate) {
+    startDate || (startDate = this.startDate);
     const result = [];
 
     let dateTime = startDate;
@@ -108,9 +109,8 @@ export default class SessionPickerApp {
   }
 
   isUnavailableDate(dateTime) {
-    const ddmmmyyyy = this.format(dateTime, 'ddmmmyyyy')
-        , isUnavailable = this.unavailableDates.indexOf(ddmmmyyyy) !== -1;
-    return isUnavailable;
+    const ddmmmyyyy = this.format(dateTime, 'ddmmmyyyy');
+    return this.unavailableDates.includes(ddmmmyyyy);
   }
 
   availableTimes(times) {
