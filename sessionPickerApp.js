@@ -34,13 +34,23 @@ class SessionTime {
 }
 
 export default class SessionPickerApp {
-  constructor({ SessionDictionary, startDate, advancedBookingDays, locale, targets }) {
+  constructor({
+    SessionDictionary,
+    startDate,
+    advancedBookingDays,
+    unavailableDates,
+    locale,
+    targets
+  }) {
     this.defaultLocale = locale;
     this.defaultLocale || (this.defaultLocale = 'en-AU');
 
     this.SessionDictionary = SessionDictionary;
+
     this.defaultStartDate = startDate;
+
     this.advancedBookingDays = advancedBookingDays;
+    this.unavailableDates = unavailableDates || [];
 
     this.targetDateEl = document.getElementById(targets.sessionDateId);
     this.targetTimeEl = document.getElementById(targets.sessionTimeId);
@@ -56,13 +66,13 @@ export default class SessionPickerApp {
     this.targetDateEl.addEventListener('click', this.showAvailableTimes.bind(this));
   }
 
-  // private
-
   showAvailableDates() {
     this.availableDatesEl.update(
       this.availableDates(this.startDate)
     );
   }
+
+  // private
 
   showAvailableTimes(eventData) {
     if (eventData.target && !eventData.target.matches('input[type="radio"]')) return;
@@ -79,6 +89,10 @@ export default class SessionPickerApp {
 
     let dateTime = startDate;
     for (let i = -1; i < this.advancedBookingDays; i++) {
+      while(this.isUnavailableDate(dateTime)) {
+        dateTime = this.nextDate(dateTime);
+      }
+
       result.push({
         label: {
           day: this.format(dateTime, 'longWeekday'),
@@ -91,6 +105,12 @@ export default class SessionPickerApp {
     }
 
     return result;
+  }
+
+  isUnavailableDate(dateTime) {
+    const ddmmmyyyy = this.format(dateTime, 'ddmmmyyyy')
+        , isUnavailable = this.unavailableDates.indexOf(ddmmmyyyy) !== -1;
+    return isUnavailable;
   }
 
   availableTimes(times) {

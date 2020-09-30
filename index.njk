@@ -84,6 +84,7 @@ input[type=radio]:checked+label {
     const app = new SessionPickerApp({
       SessionDictionary,
       advancedBookingDays,
+      unavailableDates: ["5 Oct 2020"],
       targets: {
         sessionDateId: "js-session_dates",
         sessionTimeId: "js-session_times",
@@ -94,6 +95,7 @@ input[type=radio]:checked+label {
 
     // poor man tests
     //console.log('start date', app.startDate);
+    //app.unavailableDates = ["1 Oct 2020", "3 Oct 2020"];
     //console.log('available dates', app.availableDates(app.startDate));
     //console.log('available times', app.availableTimes(SessionDictionary['Sun']));
   </script>
