@@ -1,6 +1,7 @@
 ---js
 {
-  backendUrl: process.env.BACKEND_URL
+  backendUrl: process.env.BACKEND_URL,
+  announcement: process.env.ANNOUNCEMENT,
 }
 ---
 <!DOCTYPE html>
@@ -23,6 +24,16 @@ input[type=radio]:checked+label {
     <div class="ph4 ph5-m ph6-l">
       <div class="pv5 f4 f2-ns measure center">
         <h1 class="fw6 f1 fl w-100 black-70 mt0 mb3 avenir">Booking</h1>
+
+        {% if announcement %}
+        <div class="f4 flex items-center justify-center pa4 bg-lightest-blue navy">
+          <svg class="w1" data-icon="info" viewBox="0 0 32 32" style="fill:currentcolor">
+            <title>info icon</title>
+            <path d="M16 0 A16 16 0 0 1 16 32 A16 16 0 0 1 16 0 M19 15 L13 15 L13 26 L19 26 z M16 6 A3 3 0 0 0 16 12 A3 3 0 0 0 16 6"></path>
+          </svg>
+          <span class="lh-title ml3">{{ announcement }}</span>
+        </div>
+        {% endif %}
 
         <form id="js-booking_form" action="{{ backendUrl }}" accept-charset="utf-8" method="POST">
           <input type="hidden" name="Action" value="create">

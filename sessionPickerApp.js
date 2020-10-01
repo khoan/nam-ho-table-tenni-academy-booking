@@ -56,7 +56,7 @@ export default class SessionPickerApp {
     this.targetTimeEl = document.getElementById(targets.sessionTimeId);
 
     this.availableDatesEl = list("div", SessionDate);
-    this.availableTimesEl = list(el(".f4", "Please pick a date"), SessionTime, "value");
+    this.availableTimesEl = list(el(".f4", "Please pick a date."), SessionTime, "value");
 
     mount(this.targetDateEl, this.availableDatesEl);
     mount(this.targetTimeEl, this.availableTimesEl);
