@@ -17,13 +17,25 @@ input[type=radio]:checked+label {
   color: rgba(255,255,255,0.9);
   background-color: rgba(0,0,0,0.8);
 }
+
+#css-new_booking:checked ~ nav label[for="css-new_booking"],
+#css-view_booking:checked ~ nav label[for="css-view_booking"] {
+  color: rgba(0,0,0,.9);
+}
+#css-new_booking:checked ~ .css-new_booking,
+#css-view_booking:checked ~ .css-view_booking {
+  display: inherit;
+}
+.css-tab_content {
+  display: none;
+}
   </style>
 </head>
 <body>
   <main>
     <div class="ph4 ph5-m ph6-l">
       <div class="pv5 f4 f2-ns measure center">
-        <h1 class="fw6 f1 fl w-100 black-70 mt0 mb3 avenir">Booking</h1>
+        <h1 class="fw6 f1 fl w-100 black-70 mt0 mb3 avenir">NHTTA Booking</h1>
 
         {% if announcement %}
         <div class="f4 flex items-center justify-center pa4 bg-lightest-blue navy">
@@ -35,32 +47,69 @@ input[type=radio]:checked+label {
         </div>
         {% endif %}
 
-        <form id="js-booking_form" action="{{ backendUrl }}" accept-charset="utf-8" method="POST">
-          <input type="hidden" name="Action" value="create">
+        <input id="css-new_booking" name="css-new_view" class="css-tab_control dn" type="radio">
+        <input id="css-view_booking" name="css-new_view" class="css-tab_control dn" type="radio" checked>
 
-          <fieldset id="sign_up" class="ba b--transparent ph0 mh0">
-            <legend class="ph0 mh0 fw6 clip">Booking</legend>
-            <div class="mt4">
-              <label class="db fw4 lh-copy f4 black-60" for="name">Your Name</label>
-              <input class="pa2 input-reset ba bg-transparent b--black-40" type="text" name="name" id="name" required>
+        <nav class="mt4 mb2 bb b--black-10">
+          <label for="css-new_booking" class="gray pointer dim b f4 mr3">New</label>
+          <label for="css-view_booking" class="gray pointer dim b f4 mr3">View</label>
+        </nav>
+
+        <div class="css-tab_content css-new_booking">
+          <form id="js-new_booking_form" action="{{ backendUrl }}" accept-charset="utf-8" method="POST">
+            <input type="hidden" name="Action" value="create">
+
+            <fieldset id="sign_up" class="ba b--transparent ph0 mh0">
+              <legend class="ph0 mh0 fw6 clip">New Booking</legend>
+              <div class="mt4">
+                <label class="db fw4 lh-copy f4 black-60" for="name">Your Name</label>
+                <input class="pa2 input-reset ba bg-transparent b--black-40" type="text" name="name" id="name" required>
+              </div>
+              <div class="mt4">
+                <label class="db fw4 lh-copy f4 black-60" for="contact">Your Contact Number</label>
+                <input class="pa2 input-reset ba bg-transparent b--black-40" type="text" name="contact" id="contact" required>
+              </div>
+            </fieldset>
+            <fieldset class="mt3 bn ph0">
+              <legend class="f4 fw4 black-60">Date</legend>
+              <div id="js-session_dates"></div>
+            </fieldset>
+            <fieldset class="mt3 bn ph0">
+              <legend class="f4 fw4 black-60">Time</legend>
+              <div id="js-session_times"></div>
+            </fieldset>
+            <div class="mt5">
+              <input class="pointer dim ph4 pv2 mb2 dib white bg-dark-blue" type="submit" name="submit" value="Book">
             </div>
+          </form>
+        </div>
+
+        <div class="css-tab_content css-view_booking">
+          <form id="js-view_booking_form" action="{{ backendUrl }}" accept-charset="utf-8" method="POST">
+            <input type="hidden" name="Action" value="show">
+
+            <fieldset id="sign_up" class="ba b--transparent ph0 mh0">
+              <legend class="ph0 mh0 fw6 clip">View Booking</legend>
+              <div class="mt4">
+                <label class="db fw4 lh-copy f4 black-60" for="contact">Your Contact Number</label>
+                <input class="pa2 input-reset ba bg-transparent b--black-40" type="text" name="contact" id="contact" required>
+              </div>
+            </fieldset>
             <div class="mt4">
-              <label class="db fw4 lh-copy f4 black-60" for="contact">Your Contact Number</label>
-              <input class="pa2 input-reset ba bg-transparent b--black-40" type="text" name="contact" id="contact" required>
+              <input class="pointer dim ph4 pv2 mb2 dib white bg-dark-blue" type="submit" name="submit" value="Show">
             </div>
-          </fieldset>
-          <fieldset class="mt3 bn ph0">
-            <legend class="f4 fw4 black-60">Date</legend>
-            <div id="js-session_dates"></div>
-          </fieldset>
-          <fieldset class="mt3 bn ph0">
-            <legend class="f4 fw4 black-60">Time</legend>
-            <div id="js-session_times"></div>
-          </fieldset>
-          <div class="mt5">
-            <input class="pointer dim ph4 pv2 mb2 dib white bg-dark-blue" type="submit" name="submit" value="Book">
+          </form>
+          <div id="js-view_booking_result">
+            <ul class="list pl0 measure">
+              <li class="lh-copy pv3 ba bl-0 bt-0 br-0 b--dotted b--black-30">
+                Da... Mon, 5 Oct 2020, 4pm - 6pm
+              </li>
+              <li class="lh-copy pv3 ba bl-0 bt-0 br-0 b--dotted b--black-30">
+                Gr....ar Tue, 6 Oct 2020, 4pm - 6pm
+              </li>
+            </ul>
           </div>
-        </form>
+        </div>
       </div>
     </div>
     
@@ -111,7 +160,7 @@ input[type=radio]:checked+label {
     //console.log('available times', app.availableTimes(SessionDictionary['Sun']));
   </script>
   <script>
-    const form = document.getElementById("js-booking_form");
+    const form = document.getElementById("js-new_booking_form");
     form.addEventListener("submit", (eventData) => {
       eventData.preventDefault();
 
