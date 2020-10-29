@@ -2,7 +2,7 @@
 
 ```
 npm install eleventy --save-dev
-BACKEND_URL=https://bam.com npx eleventy --serve --formats=avif,jpg,svg,webp,njk,css
+npx eleventy --serve --formats=avif,jpg,svg,webp,njk,css
 ```
 
 # reference
