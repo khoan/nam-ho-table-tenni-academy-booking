@@ -1,4 +1,4 @@
-import { el, list, mount } from "./redom.js";
+import { el, text, list, mount } from "./redom.js";
 
 class SessionDate {
   update({ label, value }) {
@@ -19,23 +19,37 @@ class SessionDate {
 }
 
 class SessionTime {
-  update({ label, value }) {
+  constructor (initData, item, i, data) {
+    const { label, value, peopleCount } = item;
     const inputId = `session-${value}`;
+
+    this.peopleCountText = text("");
 
     this.el = el(".dib.mr3",
       el(".flex.items-center",
         el("input.dn", {type: "radio", name: "session[time]", id: inputId, value, required: true}),
         el("label.ba.ph3.pv2.b--black-40.pointer", {for: inputId},
-          el(".f4.tc", label)
+          el(".f4.tc", label),
+          el(".mt1.f5.tc", {title: 'number of people booked'}, this.peopleCountText)
         )
       )
     );
+
+    this.update(item);
+  }
+
+  update({ peopleCount }) {
+    if (typeof peopleCount === 'number') {
+      this.peopleCountText.textContent = `${peopleCount} ‡`;
+    }
   }
 }
 
 export default class SessionPickerApp {
   constructor({
     SessionDictionary,
+    PeopleCountDictionary,
+    TimeslotInformation,
     startDate,
     advancedBookingDays,
     unavailableDates,
@@ -46,6 +60,8 @@ export default class SessionPickerApp {
     this.defaultLocale || (this.defaultLocale = 'en-AU');
 
     this.SessionDictionary = SessionDictionary;
+    this.PeopleCountDictionary = PeopleCountDictionary;
+    this.TimeslotInformation = TimeslotInformation;
 
     this.defaultStartDate = startDate;
 
@@ -63,7 +79,21 @@ export default class SessionPickerApp {
   }
 
   listen() {
-    this.targetDateEl.addEventListener('click', this.showAvailableTimes.bind(this));
+    this.targetDateEl.addEventListener(
+      'click',
+      (eventData) => {
+        if (eventData.target && !eventData.target.matches('input[type="radio"]')) return;
+        this.showAvailableTimes(eventData.target.value);
+      }
+    );
+  }
+
+  showSelectedDayTimeslots() {
+    const selector = `#${this.targetDateEl.id} input[type="radio"]:checked`;
+    const checkedDateInput = document.querySelector(selector);
+    if (checkedDateInput) {
+      this.showAvailableTimes(checkedDateInput.value);
+    }
   }
 
   showAvailableDates() {
@@ -72,17 +102,18 @@ export default class SessionPickerApp {
     );
   }
 
-  // private
-
-  showAvailableTimes(eventData) {
-    if (eventData.target && !eventData.target.matches('input[type="radio"]')) return;
-
+  showAvailableTimes(day) {
     this.availableTimesEl.update(
-      this.availableTimes(
-        this.SessionDictionary[eventData.target.value]
-      )
+      this.availableTimes(day)
     );
+
+    if (!this.timeslotInformationEl) {
+      this.timeslotInformationEl = el('.mt2.f5', this.TimeslotInformation);
+      this.targetTimeEl.appendChild(this.timeslotInformationEl);
+    }
   }
+
+  // private
 
   availableDates(startDate) {
     startDate || (startDate = this.startDate);
@@ -113,18 +144,21 @@ export default class SessionPickerApp {
     return this.unavailableDates.includes(ddmmmyyyy);
   }
 
-  availableTimes(times) {
+  availableTimes(day) {
+    const timeslots = this.SessionDictionary[day];
     const result = [];
 
     let dateTime = new Date;
-    for(let i = 0; i < times.length;) {
+    for(let i = 0; i < timeslots.length;) {
       const j = i + 1;
 
-      if (!times[j]) break;
+      if (!timeslots[j]) break;
 
-      const label = `${this.format(dateTime.setHours(times[i]), 'hourOfDay').replace(' ', '')} - ${this.format(dateTime.setHours(times[j]), 'hourOfDay').replace(' ', '')}`;
+      const label = `${this.format(dateTime.setHours(timeslots[i]), 'hourOfDay').replace(' ', '')} - ${this.format(dateTime.setHours(timeslots[j]), 'hourOfDay').replace(' ', '')}`;
+      const value = timeslots[i];
+      const peopleCount = (this.PeopleCountDictionary[day] || {})[value];
 
-      result.push({ label, value: times[i]} );
+      result.push({ label, value, peopleCount });
 
       i = j;
     }

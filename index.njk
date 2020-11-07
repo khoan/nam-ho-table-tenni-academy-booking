@@ -1,7 +1,8 @@
 ---js
 {
-  backendUrl: process.env.BACKEND_URL,
   announcement: process.env.ANNOUNCEMENT,
+  backendUrl: process.env.BACKEND_URL || 'http://bam.com',
+  timeslotCapacity: process.env.TIMESLOT_CAPACITY || 24,
 }
 ---
 <!DOCTYPE html>
@@ -80,6 +81,7 @@ input[type=radio]:checked+label {
   </footer>
   <script type="module">
     import SessionPickerApp from './sessionPickerApp.js';
+    import BookingLoaderApp from './bookingLoaderApp.js';
 
     const SessionDictionary = {
       Mon: [16,18,20,22],
@@ -90,10 +92,13 @@ input[type=radio]:checked+label {
       Sat: [14,16,18],
       Sun: [14,16,18],
     };
+    const PeopleCountDictionary = {};
     const advancedBookingDays = 2;
 
     const app = new SessionPickerApp({
       SessionDictionary,
+      PeopleCountDictionary,
+      TimeslotInformation: "‡ Each timeslot has a maximum capacity of {{ timeslotCapacity }} people.",
       advancedBookingDays,
       unavailableDates: ["5 Oct 2020"],
       targets: {
@@ -104,11 +109,33 @@ input[type=radio]:checked+label {
     app.showAvailableDates();
     app.listen();
 
+    const loader = new BookingLoaderApp({
+      url: "{{ backendUrl }}",
+      PeopleCountDictionary,
+      onLoad: app.showSelectedDayTimeslots.bind(app)
+    });
+    loader.run();
+
     // poor man tests
     //console.log('start date', app.startDate);
     //app.unavailableDates = ["1 Oct 2020", "3 Oct 2020"];
     //console.log('available dates', app.availableDates(app.startDate));
     //console.log('available times', app.availableTimes(SessionDictionary['Sun']));
+    //setTimeout(() => {
+    //  Object.assign(PeopleCountDictionary, {
+    //    Mon: {16: 2, 18: 24, 20: 30},
+    //    Tue: {16: 2, 18: 24, 20: 30},
+    //    Wed: {16: 2, 18: 24, 20: 30},
+    //    Thu: {16: 2, 18: 24, 20: 30},
+    //    Fri: {16: 2, 18: 24, 20: 30},
+    //    Sat: {14: 0, 16: 2},
+    //    Sun: {14: 2, 16: 20},
+    //  });
+    //  const checkedDateInput = document.querySelector('#js-session_dates input[type="radio"]:checked');
+    //  if (checkedDateInput) {
+    //    app.showAvailableTimes(checkedDateInput.value);
+    //  }
+    //}, 3000);
   </script>
   <script>
     const form = document.getElementById("js-booking_form");
