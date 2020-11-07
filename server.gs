@@ -1,3 +1,4 @@
+
 /**
  * aim:
  *   capture user details and their bookings
@@ -51,6 +52,7 @@ var Tools = {
 , content: ContentService
 , sheet: SpreadsheetApp
 , json: JSON
+, misc: Utilities
 };
 
 var Sheet = (function(service, config) {
@@ -156,6 +158,45 @@ var App = (function(tools, meta, sheet) {
   }
   
   /**
+   * GET ?action=index
+   */
+  actions.index = function (e) {
+    var result = {
+      status: "200 OK",
+      body: {}
+    };
+    
+    for (var day in meta.sheets) {
+      var values = sheet(day).values();
+      var headerRow = values[meta.sheets[day].headerRow-1];
+      
+      var dayResult = {};  // {[col]: {timeslot,count}}
+      for(var j=0; j < headerRow.length; j++) {
+        if (typeof headerRow[j] === "number") {
+          dayResult[j] = {timeslot: headerRow[j], count: 0};
+        }
+      }
+      
+      var bookedPattern = /v/i;
+      var columns = Object.keys(dayResult);
+      for (var i=meta.sheets[day].headerRow; i < values.length; i++) {
+        for (var j of columns) {
+          if (values[i][j].toString().match(bookedPattern)) {
+            dayResult[j].count += 1;
+          }
+        }
+      }
+
+      result.body[day] = columns.reduce(function(memo, column) {
+        memo[dayResult[column].timeslot] = dayResult[column].count;
+        return memo;
+      }, {});      
+    }
+    
+    return result;
+  }
+  
+  /**
    *  POST ?action=create...
    */
   actions.create = function (e) {
@@ -181,6 +222,24 @@ var App = (function(tools, meta, sheet) {
 })(Tools, META, Sheet);
 
 
+function testActionIndexBooking() {
+  /**
+   * {
+   *   Mon: {16: 2, 18: 24, 20: 30},
+   *   Tue: {16: 2, 18: 24, 20: 30},
+   *   Wed: {16: 2, 18: 24, 20: 30},
+   *   Thu: {16: 2, 18: 24, 20: 30},
+   *   Fri: {16: 2, 18: 24, 20: 30},
+   *   Sat: {14: 0, 16: 2},
+   *   Sun: {14: 2, 16: 20},
+   * }
+   */
+  var result = App.actions.index();
+
+  
+  var breakpoint = {};
+}
+
 function testActionCreateBooking() {
   var result = App.actions.create({
     "parameters": {
@@ -202,7 +261,6 @@ function testActionCreateBooking() {
       "session[date]": "Sun",
     },    
   });
-
   
   var breakpoint = {};
 }
