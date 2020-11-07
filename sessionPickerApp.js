@@ -88,6 +88,14 @@ export default class SessionPickerApp {
     );
   }
 
+  showSelectedDayTimeslots() {
+    const selector = `#${this.targetDateEl.id} input[type="radio"]:checked`;
+    const checkedDateInput = document.querySelector(selector);
+    if (checkedDateInput) {
+      this.showAvailableTimes(checkedDateInput.value);
+    }
+  }
+
   showAvailableDates() {
     this.availableDatesEl.update(
       this.availableDates()

@@ -81,6 +81,7 @@ input[type=radio]:checked+label {
   </footer>
   <script type="module">
     import SessionPickerApp from './sessionPickerApp.js';
+    import BookingLoaderApp from './bookingLoaderApp.js';
 
     const SessionDictionary = {
       Mon: [16,18,20,22],
@@ -107,6 +108,13 @@ input[type=radio]:checked+label {
     });
     app.showAvailableDates();
     app.listen();
+
+    const loader = new BookingLoaderApp({
+      url: "{{ backendUrl }}",
+      PeopleCountDictionary,
+      onLoad: app.showSelectedDayTimeslots.bind(app)
+    });
+    loader.run();
 
     // poor man tests
     //console.log('start date', app.startDate);
