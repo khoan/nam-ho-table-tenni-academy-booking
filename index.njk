@@ -1,8 +1,8 @@
 ---js
-{
-  announcement: process.env.ANNOUNCEMENT,
-  backendUrl: process.env.BACKEND_URL || 'http://bam.com',
-  timeslotCapacity: process.env.TIMESLOT_CAPACITY || 24,
+{ announcement: process.env.ANNOUNCEMENT
+, backendUrl: process.env.BACKEND_URL || 'http://bam.com'
+, timeslotCapacity: process.env.TIMESLOT_CAPACITY || 26
+, unavailableDates: process.env.UNAVAILABLE_DATES
 }
 ---
 <!DOCTYPE html>
@@ -84,6 +84,7 @@ input[type=radio]:checked+label {
     import BookingLoaderApp from './bookingLoaderApp.js';
 
     const SessionDictionary = {
+      "Mon, 28 Dec 2020": [14,16,18],
       Mon: [16,18,20,22],
       Tue: [16,18,20,22],
       Wed: [16,18,20,22],
@@ -100,7 +101,7 @@ input[type=radio]:checked+label {
       PeopleCountDictionary,
       TimeslotInformation: "‡ Each timeslot has a maximum capacity of {{ timeslotCapacity }} people.",
       advancedBookingDays,
-      unavailableDates: ["5 Oct 2020"],
+      unavailableDates: "{{ unavailableDates }}".split("__"),
       targets: {
         sessionDateId: "js-session_dates",
         sessionTimeId: "js-session_times",

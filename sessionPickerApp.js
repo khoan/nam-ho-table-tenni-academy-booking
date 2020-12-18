@@ -145,7 +145,9 @@ export default class SessionPickerApp {
   }
 
   availableTimes(day) {
-    const timeslots = this.SessionDictionary[day];
+    const date = this.availableDates().find(date => date.value === day);
+    const specificDay = `${date.value}, ${date.label.date}`;
+    const timeslots = this.SessionDictionary[specificDay] || this.SessionDictionary[day] || [];
     const result = [];
 
     let dateTime = new Date;
